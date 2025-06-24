@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Photo Optimizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🎯 LinkedIn Photo Optimizer</h1>
+            <p>Transform your photos into professional LinkedIn profile pictures</p>
+        </header>
+
+        <!-- Reference Image Section -->
+        <section id="reference-section" class="reference-section">
+            <div class="reference-container">
+                <h2>🎯 Step 1: Upload Reference Image</h2>
+                <p>Upload a good quality photo of yourself as reference</p>
+                <div class="reference-upload" id="reference-upload">
+                    <div class="reference-content">
+                        <div class="reference-icon">👤</div>
+                        <h4>Upload Reference Photo</h4>
+                        <p>This helps us identify you in other photos</p>
+                        <button class="reference-btn" id="reference-btn">Choose Reference</button>
+                        <input type="file" id="reference-input" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+                <div class="reference-preview hidden" id="reference-preview">
+                    <img id="reference-image" src="" alt="Reference">
+                    <div class="reference-status" id="reference-status">
+                        <div class="status-spinner"></div>
+                        <span>Validating reference image...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section id="upload-section" class="upload-section hidden">
+            <div class="upload-container">
+                <h2>📸 Step 2: Upload Photos to Optimize</h2>
+                <p>Upload multiple photos to find your best LinkedIn profile picture</p>
+                <div class="upload-zone" id="upload-zone">
+                    <div class="upload-content">
+                        <div class="upload-icon">📸</div>
+                        <h3>Drag & Drop Your Photos</h3>
+                        <p>Upload photos containing the same person as reference</p>
+                        <button class="upload-btn" id="upload-btn">Choose Files</button>
+                        <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Processing Section -->
+        <section id="processing-section" class="processing-section hidden">
+            <div class="processing-container">
+                <div class="processing-spinner"></div>
+                <h2 id="processing-title">🔍 Analyzing Your Photos...</h2>
+                <div class="processing-steps">
+                    <div class="step" id="step-1">
+                        <div class="step-icon">📷</div>
+                        <span>Loading images</span>
+                        <div class="step-status">⏳</div>
+                    </div>
+                    <div class="step" id="step-2">
+                        <div class="step-icon">🎯</div>
+                        <span>Detecting faces</span>
+                        <div class="step-status">⏳</div>
+                    </div>
+                    <div class="step" id="step-3">
+                        <div class="step-icon">🎨</div>
+                        <span>Replacing backgrounds</span>
+                        <div class="step-status">⏳</div>
+                    </div>
+                    <div class="step" id="step-4">
+                        <div class="step-icon">⭐</div>
+                        <span>Scoring quality</span>
+                        <div class="step-status">⏳</div>
+                    </div>
+                    <div class="step" id="step-5">
+                        <div class="step-icon">🏆</div>
+                        <span>Selecting top 5</span>
+                        <div class="step-status">⏳</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <p class="progress-text" id="progress-text">Processing your photos...</p>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="results-section hidden">
+            <div class="results-header">
+                <h2>🎉 Your Top 5 LinkedIn Photos</h2>
+                <p>Here are your best photos, ready for enhancement!</p>
+            </div>
+            <div class="photos-grid" id="photos-grid">
+                <!-- Top 5 original photos will be inserted here -->
+            </div>
+            <div class="enhancement-controls">
+                <div class="auto-enhance-message" id="auto-enhance-message">
+                    <h3>🎉 Your Top 5 LinkedIn Photos</h3>
+                    <p>Enhancement will start automatically in <span id="countdown">5</span> seconds...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Results Section -->
+        <section id="final-section" class="final-section hidden">
+            <div class="final-header">
+                <h2>🚀 Your Optimized LinkedIn Photos</h2>
+                <p>Professional photos ready for LinkedIn!</p>
+            </div>
+            <div class="comparison-grid" id="comparison-grid">
+                <!-- Before/after comparisons will be inserted here -->
+            </div>
+            <div class="download-controls">
+                <button class="download-btn" id="download-btn">
+                    <span class="download-icon">💾</span>
+                    Download All Photos
+                </button>
+                <button class="restart-btn" id="restart-btn">
+                    <span class="restart-icon">🔄</span>
+                    Start Over
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# Core ML and image processing
+torch==2.7.1
+torchvision==0.22.1
+tensorflow==2.19.0
+keras==3.10.0
+numpy==1.26.4
+opencv-python==4.11.0.86
+pillow==11.2.1
+scikit-image==0.25.2
+scipy==1.15.3
+
+# Face detection
+insightface==0.7.3 s
+retina-face==0.0.17
+mtcnn==1.0.0
+
+# Scoring models
+open_clip_torch==2.32.0
+deepface==0.0.93
+
+# Utilities
+python-dotenv==1.1.0
+requests==2.32.4
+tqdm==4.67.1
+pathspec==0.12.1
+
+# Web API
+flask==3.1.0
+flask-cors==5.0.0
