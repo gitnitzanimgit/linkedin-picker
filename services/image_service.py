@@ -118,11 +118,11 @@ class ImageService:
         # Debug logging for crop bounds
         width = bound_r - bound_l
         height = bound_b - bound_t
-        print(f"🔍 CROP DEBUG: bounds=({bound_l},{bound_t},{bound_r},{bound_b}) → width={width}, height={height}")
+        print(f"CROP DEBUG: bounds=({bound_l},{bound_t},{bound_r},{bound_b}) → width={width}, height={height}")
         
         if bound_l >= bound_r or bound_t >= bound_b:
             img_h, img_w = img.pixels.shape[:2]
-            print(f"❌ INVALID CROP BOUNDS:")
+            print(f"INVALID CROP BOUNDS:")
             print(f"   Original image: {img_w}x{img_h}")
             print(f"   Crop bounds: left={bound_l}, right={bound_r}, top={bound_t}, bottom={bound_b}")
             print(f"   Resulting size: {width}x{height}")

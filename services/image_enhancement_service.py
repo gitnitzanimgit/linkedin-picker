@@ -140,7 +140,7 @@ class ImageEnhancementService:
         enhanced_images = []
         
         for i, img in enumerate(images, 1):
-            print(f"   🎨 Enhancing image {i}/{len(images)}")
+            print(f"   Enhancing image {i}/{len(images)}")
             enhanced_img = self._optimise(img)
             enhanced_images.append(enhanced_img)
         

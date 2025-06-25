@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-LinkedIn Photo Optimizer API Server (Step-by-Step)
+Professional Photo Enhancement API Server (Step-by-Step)
 Each pipeline step has its own API endpoint for full control and visibility.
 """
 
@@ -192,7 +192,7 @@ def validate_reference():
             if is_valid:
                 return jsonify({
                     'valid': True,
-                    'message': 'Great reference image! All quality checks passed.',
+                    'message': 'Reference image validated. All quality checks passed.',
                     'details': json_details
                 })
             else:
@@ -478,7 +478,7 @@ def health_check():
     """Health check endpoint."""
     return jsonify({
         'status': 'healthy', 
-        'message': 'LinkedIn Photo Optimizer API (Step-by-Step) is running',
+        'message': 'Professional Photo Enhancement API (Step-by-Step) is running',
         'active_sessions': len(sessions)
     })
 
@@ -519,12 +519,12 @@ def internal_error(e):
 
 
 if __name__ == '__main__':
-    print("🚀 Starting LinkedIn Photo Optimizer API Server (Step-by-Step)...")
-    print(f"📁 Upload directory: {UPLOAD_FOLDER}")
-    print(f"📁 Results directory: {RESULTS_FOLDER}")
-    print(f"🔧 Max upload size: {MAX_CONTENT_LENGTH // (1024*1024)}MB")
-    print("🌐 CORS enabled for frontend communication")
-    print("📋 Pipeline Steps:")
+    print("Starting Professional Photo Enhancement API Server (Step-by-Step)...")
+    print(f"Upload directory: {UPLOAD_FOLDER}")
+    print(f"Results directory: {RESULTS_FOLDER}")
+    print(f"Max upload size: {MAX_CONTENT_LENGTH // (1024*1024)}MB")
+    print("CORS enabled for frontend communication")
+    print("Pipeline Steps:")
     print("   1. /api/validate-reference")
     print("   2. /api/load-images")  
     print("   3. /api/detect-and-crop")

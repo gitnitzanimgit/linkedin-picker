@@ -57,7 +57,7 @@ class ScoredImageService:
             )
             removed_count = before_count - len(filtered_images)
             if removed_count > 0:
-                print(f"🤖 Filtered {removed_count} images with non-neutrality < {self.min_non_neutrality}% (too neutral/robotic)")
+                print(f" Filtered {removed_count} images with non-neutrality < {self.min_non_neutrality}% (too neutral/robotic)")
         
         # Apply LinkedIn quality filter
         if apply_linkedin_filter:
@@ -67,7 +67,7 @@ class ScoredImageService:
             )
             removed_count = before_count - len(filtered_images)
             if removed_count > 0:
-                print(f"📸 Filtered {removed_count} images with LinkedIn score < {self.min_linkedin_score}")
+                print(f" Filtered {removed_count} images with LinkedIn score < {self.min_linkedin_score}")
         
         # Apply attire filter
         if apply_attire_filter:
@@ -77,7 +77,7 @@ class ScoredImageService:
             )
             removed_count = before_count - len(filtered_images)
             if removed_count > 0:
-                print(f"👔 Filtered {removed_count} images with attire score < {self.min_attire_score}")
+                print(f" Filtered {removed_count} images with attire score < {self.min_attire_score}")
         
         # Apply final score filter
         if apply_final_filter:
@@ -87,11 +87,11 @@ class ScoredImageService:
             )
             removed_count = before_count - len(filtered_images)
             if removed_count > 0:
-                print(f"⭐ Filtered {removed_count} images with final score < {self.min_final_score}")
+                print(f" Filtered {removed_count} images with final score < {self.min_final_score}")
         
         total_removed = original_count - len(filtered_images)
         if total_removed > 0:
-            print(f"📊 Total: {total_removed} images filtered, {len(filtered_images)} remaining")
+            print(f" Total: {total_removed} images filtered, {len(filtered_images)} remaining")
         
         return filtered_images
     
@@ -151,7 +151,7 @@ class ScoredImageService:
         # Log which images were kept vs discarded
         discarded_count = len(scored_images) - len(top_images)
         if discarded_count > 0:
-            print(f"🏆 Keeping top {n} images, discarded {discarded_count} lower-scoring images")
+            print(f" Keeping top {n} images, discarded {discarded_count} lower-scoring images")
         
         return top_images
     
@@ -208,7 +208,7 @@ class ScoredImageService:
             
             # Highlight top N images
             if i <= top_n:
-                print(f"{i:2d}. ⭐ Score: {scored_img.final_score:6.2f} | "
+                print(f"{i:2d}.  Score: {scored_img.final_score:6.2f} | "
                       f"LinkedIn: {scored_img.linkedin_score:5.1f} | "
                       f"Attire: {scored_img.attire_score:5.1f} | "
                       f"Non-neutrality: {scored_img.face_neutrality_score:5.1f} | "
@@ -230,7 +230,7 @@ class ScoredImageService:
         print(f"CLIP Non-neutrality Raw Range: {stats['non_neutrality']['min']/100:.4f} - {stats['non_neutrality']['max']/100:.4f}")
         print(f"{'='*80}")
         print(f"Total images scored: {len(scored_images)}")
-        print(f"Top {top_n} images are highlighted with ⭐")
+        print(f"Top {top_n} images are highlighted with ")
         print(f"{'='*80}\n")
     
     def get_filter_settings(self) -> dict:

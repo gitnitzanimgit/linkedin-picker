@@ -12,10 +12,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Debug: Check if logger is working
-print(f"🔍 Logger name: {logger.name}")
-print(f"🔍 Logger level: {logger.level}")
-print(f"🔍 Logger effective level: {logger.getEffectiveLevel()}")
-print(f"🔍 Logger handlers: {logger.handlers}")
+print(f"Logger name: {logger.name}")
+print(f"Logger level: {logger.level}")
+print(f"Logger effective level: {logger.getEffectiveLevel()}")
+print(f"Logger handlers: {logger.handlers}")
 logger.info("Test log message from face_analysis_service")
 
 # Load environment variables

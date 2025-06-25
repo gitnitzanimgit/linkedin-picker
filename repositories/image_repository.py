@@ -34,7 +34,7 @@ class ImageRepository:
 
         # ─── timeout wrapper (5 s default) ────────────────────────────────
         def _handler(signum, frame):
-            print(f"⏰ timeout while reading {path}")  # debug line
+            print(f"Timeout while reading {path}")  # debug line
             raise TimeoutError(f"cv2.imread timed-out after {timeout}s: {path}")
 
         signal.signal(signal.SIGALRM, _handler)
@@ -89,19 +89,19 @@ class ImageRepository:
         pattern = "**/*" if recursive else "*"
 
         for p in folder.glob(pattern):
-            print(f"🔎 FILE: {p}")
+            print(f"FILE: {p}")
             if p.suffix.lower() not in allowed:
-                print(f"⏭️ Skipping due to extension: {p}")
+                print(f"Skipping due to extension: {p}")
                 continue
             if not p.is_file():
-                print(f"⏭️ Skipping because not file: {p}")
+                print(f"Skipping because not file: {p}")
                 continue
             try:
-                print(f"📤 Loading: {p}")
+                print(f"Loading: {p}")
                 yield self.load(p)
-                print(f"✅ Loaded: {p}")
+                print(f"Loaded: {p}")
             except Exception as err:
-                print(f"❌ Skipping {p.name}: {err}")
+                print(f"Skipping {p.name}: {err}")
 
     # (optional) keep the old API but implement it with the iterator
     def load_dir(

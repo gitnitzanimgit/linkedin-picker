@@ -38,7 +38,7 @@ class FaceEngine:
         Args:
             model_name (str): Model name from the InsightFace model zoo. Defaults to env var.
             ctx_id (int): 0 = CPU, 1+ = GPU index if using CUDA. Defaults to env var.
-                         Note: MPS (Apple Silicon) not supported by InsightFace.
+                         MPS (Apple Silicon) not supported by InsightFace.
         """
         # Load from environment variables if not provided
         if model_name is None:
@@ -53,7 +53,7 @@ class FaceEngine:
         else:
             ctx_id = 0   # CPU
             device_name = "CPU"
-        # Note: MPS disabled - using CPU instead for better determinism
+        # MPS disabled - using CPU instead for better determinism
         
         # ─── FORCE SINGLE THREAD FOR DETERMINISM ─────────────────────────────
         os.environ["OMP_NUM_THREADS"] = "1"
@@ -71,9 +71,9 @@ class FaceEngine:
         try:
             # Get actual thread counts from numpy
             omp_threads = np.get_num_threads()
-            print(f"🔍 InsightFace using: {device_name} (ctx_id={ctx_id}) | NumPy threads: {omp_threads}")
+            print(f"InsightFace using: {device_name} (ctx_id={ctx_id}) | NumPy threads: {omp_threads}")
         except:
-            print(f"🔍 InsightFace using: {device_name} (ctx_id={ctx_id}) | Threads: unknown")
+            print(f"InsightFace using: {device_name} (ctx_id={ctx_id}) | Threads: unknown")
         # ─────────────────────────────────────────────────────────────────────
 
         self.app = FaceAnalysis(name=model_name)

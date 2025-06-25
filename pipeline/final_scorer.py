@@ -116,7 +116,7 @@ def _log_top_scoring_images(scored_gallery: List[ScoredImage], top_n: int = 5):
         
         # Highlight top N images
         if i <= top_n:
-            print(f"{i:2d}. ⭐ Score: {scored_img.final_score:6.2f} | "
+            print(f"{i:2d}.  Score: {scored_img.final_score:6.2f} | "
                   f"LinkedIn: {scored_img.linkedin_score:5.1f} | "
                   f"Attire: {scored_img.attire_score:5.1f} | "
                   f"Non-neutrality: {scored_img.face_neutrality_score:5.1f} | "
@@ -140,5 +140,5 @@ def _log_top_scoring_images(scored_gallery: List[ScoredImage], top_n: int = 5):
     print(f"CLIP Non-neutrality Raw Range: {min(face_neutrality_raw_scores):.4f} - {max(face_neutrality_raw_scores):.4f}")
     print(f"{'='*80}")
     print(f"Total images scored: {len(scored_gallery)}")
-    print(f"Top {top_n} images are highlighted with ⭐")
+    print(f"Top {top_n} images are highlighted with ")
     print(f"{'='*80}\n") 

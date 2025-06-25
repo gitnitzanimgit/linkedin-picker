@@ -37,42 +37,42 @@ ref_img = image_service.load("data/target_image/very_good_image.jpeg")
 # Load gallery
 gallery = image_service.stream_gallery("data/image_batch")
 
-print(f"\n🚀 STARTING EFFICIENT IN-MEMORY PIPELINE...")
+print(f"\nStarting efficient in-memory pipeline...")
 
 # Reset gallery iterator since we consumed it above for counting
 gallery = image_service.stream_gallery("data/image_batch")
 
 # Step 1: Detect and crop (in-memory processing)
-print(f"\n🔍 Step 1: Face detection and cropping...")
+print(f"\nStep 1: Face detection and cropping...")
 detected_cropped_gallery = detect_and_crop(gallery=gallery, ref_img=ref_img)
-print(f"✅ Cropped {len(detected_cropped_gallery)} images with matching faces")
+print(f"Cropped {len(detected_cropped_gallery)} images with matching faces")
 
 # Preserve original state before pipeline modifications
 for img in detected_cropped_gallery:
     image_service.preserve_original_state(img)
 
 # Step 2: Replace backgrounds (in-memory processing)
-print(f"\n🎨 Step 2: Background replacement...")
+print(f"\nStep 2: Background replacement...")
 replaced_background_gallery = replace_background(detected_cropped_gallery)
-print(f"✅ Processed {len(replaced_background_gallery)} images with new backgrounds")
+print(f"Processed {len(replaced_background_gallery)} images with new backgrounds")
 
 # Step 3: Score and filter (returns top 5 only)
-print(f"\n⭐ Step 3: Quality scoring and filtering...")
+print(f"\nStep 3: Quality scoring and filtering...")
 final_scored_gallery = score_final_photos(replaced_background_gallery)
-print(f"✅ Selected top {len(final_scored_gallery)} highest-quality images")
+print(f"Selected top {len(final_scored_gallery)} highest-quality images")
 
 # Step 4: Final enhancement (in-memory processing)
-print(f"\n🚀 Step 4: Final image enhancement...")
+print(f"\nStep 4: Final image enhancement...")
 enhanced_final_gallery = enhance_top_images(final_scored_gallery)
 
 # SINGLE SAVE OPERATION: Only save the final enhanced results
-print(f"\n💾 Saving final enhanced images...")
+print(f"\nSaving final enhanced images...")
 image_service.save_scored_gallery(enhanced_final_gallery)
 
 # Log the final results
 log_final_results(enhanced_final_gallery)
 
-print(f"\n🎉 PIPELINE COMPLETE!")
-print(f"📈 Efficiency: Processed entire pipeline in-memory with only 1 save operation!")
-print(f"📁 Final images available in enhanced_gallery/ directory")
-print(f"🔄 Original images preserved for comparison in each Image object")
+print(f"\nPipeline complete!")
+print(f"Efficiency: Processed entire pipeline in-memory with only 1 save operation!")
+print(f"Final images available in enhanced_gallery/ directory")
+print(f"Original images preserved for comparison in each Image object")

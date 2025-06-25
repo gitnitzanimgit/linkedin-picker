@@ -39,12 +39,12 @@ class CroppingService:
 
         # Get bounding box coordinates
         left, top, right, bottom = self.face_service.get_bbox_coordinates(face)
-        print(f"🎯 FACE DEBUG: bbox=({left},{top},{right},{bottom}) → face_size={right-left}x{bottom-top}")
-        print(f"📏 IMAGE DEBUG: size={width_img}x{height_img}")
+        print(f"FACE DEBUG: bbox=({left},{top},{right},{bottom}) → face_size={right-left}x{bottom-top}")
+        print(f"IMAGE DEBUG: size={width_img}x{height_img}")
 
         # Get padding sizes
         pad_side_size, pad_top_size, pad_bottom_size = self.get_padding_sizes(face,pad_side_factor, pad_top_factor, pad_bottom_factor)
-        print(f"📦 PADDING DEBUG: side={pad_side_size}, top={pad_top_size}, bottom={pad_bottom_size}")
+        print(f"PADDING DEBUG: side={pad_side_size}, top={pad_top_size}, bottom={pad_bottom_size}")
 
         # Calculate new bounds
         bound_l = round(max(0, left - pad_side_size))
