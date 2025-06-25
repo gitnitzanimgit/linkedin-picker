@@ -2,37 +2,69 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import List, Union
+import os
+import logging
 
 import torch
 from tqdm import trange
+from dotenv import load_dotenv
 
 from models.image import Image
 from models.image_adjustments import BrightnessContrastGamma
 from models.clip_model import ClipModel
 from services.image_service import ImageService
 
+# Load environment variables
+load_dotenv()
+
+logger = logging.getLogger(__name__)
+
 
 class ImageEnhancementService:
     """
     Finds brightness/contrast/gamma that maximise CLIP similarity
-    to a “well-lit headshot” prompt for each input image.
+    to a "well-lit headshot" prompt for each input image.
+    *   No I/O here—works only with Image objects (RGB numpy arrays).
+    *   Uses environment variables for configuration.
     """
 
-    PROMPT = ("Subject studio-style lit, face clear and crisp, "
-              "Overall image brightness is high")
-
-    # hyper-params
-    LR_START = 0.005
-    LR_FACTOR = 0.10
-    LR_PATIENCE = 50
-    STOP_PAT = 100
-    EPS = 1e-4
-    MAX_STEPS = 200
-
-    def __init__(self):
-        self.clip = ClipModel()
-        self.txt_feat = self.clip.encode_text(self.PROMPT)
+    def __init__(self, 
+                 clip_arch: str = None,
+                 clip_pretrained: str = None,
+                 prompt: str = None):
+        """
+        Initialize the ImageEnhancementService with configurable parameters.
+        
+        Args:
+            clip_arch: CLIP model architecture (defaults to env var)
+            clip_pretrained: CLIP pretrained weights (defaults to env var)  
+            prompt: Enhancement prompt (defaults to env var)
+        """
+        # Load configuration from environment variables
+        self.prompt = prompt or os.getenv("ENHANCEMENT_PROMPT", 
+            "Subject studio-style lit, face clear and crisp, Overall image brightness is high")
+        
+        # Optimization hyperparameters
+        self.lr_start = float(os.getenv("ENHANCEMENT_LR_START", "0.005"))
+        self.lr_factor = float(os.getenv("ENHANCEMENT_LR_FACTOR", "0.10"))
+        self.lr_patience = int(os.getenv("ENHANCEMENT_LR_PATIENCE", "50"))
+        self.stop_patience = int(os.getenv("ENHANCEMENT_STOP_PATIENCE", "100"))
+        self.eps = float(os.getenv("ENHANCEMENT_EPS", "1e-4"))
+        self.max_steps = int(os.getenv("ENHANCEMENT_MAX_STEPS", "200"))
+        
+        # Initialize models (use defaults to maintain caching)
+        if clip_arch is None and clip_pretrained is None:
+            # Use default ClipModel for caching
+            self.clip = ClipModel()
+        else:
+            # Only override if explicitly requested
+            clip_arch = clip_arch or os.getenv("CLIP_MODEL_ARCH", "ViT-B-32")
+            clip_pretrained = clip_pretrained or os.getenv("CLIP_PRETRAINED", "laion2b_s34b_b79k")
+            self.clip = ClipModel(arch=clip_arch, ckpt=clip_pretrained)
+        self.txt_feat = self.clip.encode_text(self.prompt)
         self.img_svc = ImageService()
+        
+        logger.info(f"ImageEnhancementService initialized with prompt: {self.prompt[:50]}...")
 
     # ─── Public API ────────────────────────────────────────────────
     def optimise_file(self, path: Union[str, Path]) -> Path:
@@ -56,14 +88,14 @@ class ImageEnhancementService:
         bcg = BrightnessContrastGamma()
         p_b, p_c, p_g = bcg.as_parameters(device)
         params = [p_b, p_c, p_g]
-        opt = torch.optim.SGD(params, lr=self.LR_START, momentum=0.9)
+        opt = torch.optim.SGD(params, lr=self.lr_start, momentum=0.9)
 
         best = self._sim(crop).item()
-        lr_now = self.LR_START
+        lr_now = self.lr_start
         no_imp = no_imp_lr = 0
         trace = [best]
 
-        for _ in trange(self.MAX_STEPS, desc="optim", ncols=70):
+        for _ in trange(self.max_steps, desc="optim", ncols=70):
             opt.zero_grad()
             sim = self._sim(BrightnessContrastGamma._apply_raw(crop, p_b, p_c, p_g))
             (-sim).backward()
@@ -72,19 +104,19 @@ class ImageEnhancementService:
             score = sim.item()
             trace.append(score)
 
-            if score > best + self.EPS:
+            if score > best + self.eps:
                 best, no_imp, no_imp_lr = score, 0, 0
             else:
                 no_imp += 1
                 no_imp_lr += 1
 
-            if no_imp_lr >= self.LR_PATIENCE:
-                lr_now *= self.LR_FACTOR
+            if no_imp_lr >= self.lr_patience:
+                lr_now *= self.lr_factor
                 for g in opt.param_groups:
                     g["lr"] = lr_now
                 no_imp_lr = 0
 
-            if no_imp >= self.STOP_PAT:
+            if no_imp >= self.stop_patience:
                 break
 
         # Apply changes

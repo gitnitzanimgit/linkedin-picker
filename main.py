@@ -2,12 +2,17 @@ import os
 import logging
 import numpy as np
 import random
+from dotenv import load_dotenv
+
+# Load environment variables first
+load_dotenv()
 
 # --- DETERMINISTIC EXECUTION SETUP ---
 # Set seeds for reproducible results
-np.random.seed(42)
-random.seed(42)
-os.environ['PYTHONHASHSEED'] = '42'
+random_seed = int(os.getenv("RANDOM_SEED", "42"))
+np.random.seed(random_seed)
+random.seed(random_seed)
+os.environ['PYTHONHASHSEED'] = os.getenv("PYTHON_HASH_SEED", "42")
 
 # --- Centralized Logging Configuration ---
 # This should be the first thing to run to ensure all modules use the same config.

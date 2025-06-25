@@ -82,7 +82,9 @@ class FaceAnalysisService:
     def _similarity(self, embedding_a: np.ndarray, embedding_b: np.ndarray) -> float:
         return self._cosine(embedding_a, embedding_b)
 
-    def is_same_person(self, face_a: Face, face_b: Face, thr: float = 0.4) -> bool:
+    def is_same_person(self, face_a: Face, face_b: Face, thr: float = None) -> bool:
+        if thr is None:
+            thr = float(os.getenv("FACE_SIMILARITY_THRESHOLD", "0.3"))
         face_a_embedding = self._get_face_embedding(face_a)
         face_b_embedding = self._get_face_embedding(face_b)
         return self._similarity(face_a_embedding, face_b_embedding) >= thr

@@ -17,7 +17,7 @@ class AttireService:
     *   Loads model once and caches it for efficient batch processing.
     """
     
-    def __init__(self, model_name: str = "ViT-B-32", pretrained: str = "laion2b_s34b_b79k"):
+    def __init__(self, model_name: str = None, pretrained: str = None):
         # Use MPS on Apple Silicon, CUDA on NVIDIA, CPU otherwise
         if torch.cuda.is_available():
             self.device = "cuda"
@@ -25,8 +25,8 @@ class AttireService:
             self.device = "mps"
         else:
             self.device = "cpu"
-        self.model_name = model_name
-        self.pretrained = pretrained
+        self.model_name = model_name or os.getenv("CLIP_MODEL_ARCH", "ViT-B-32")
+        self.pretrained = pretrained or os.getenv("CLIP_PRETRAINED", "laion2b_s34b_b79k")
         self.model = None
         self.preprocess = None
         self.tokenizer = None
@@ -59,8 +59,10 @@ class AttireService:
         
         # Define prompts for appropriate vs inappropriate attire
         prompts = [
-            "a person wearing normal clothes for a profile photo, like an unwrinkled and suitable t-shirt or a jacket",
-            "a person wearing strange, revealing, or inappropriate clothes for a profile photo, like a costume, tank top, or large v-neck"
+            os.getenv("ATTIRE_APPROPRIATE_PROMPT", 
+                "a single person wearing normal clothes for a profile photo, like an unwrinkled and suitable t-shirt or a jacket."),
+            os.getenv("ATTIRE_INAPPROPRIATE_PROMPT",
+                "a single person wearing strange, revealing, or inappropriate clothes for a profile photo, like a costume, tank top, or large v-neck (a slight v-neck is okay). Person has unappropriate stuff on his face for a professional headshot (mask, large earrings, etc.). Person is holding a phone")
         ]
         
         # Tokenize prompts
@@ -91,32 +93,36 @@ class AttireService:
         
         return scaled_score
     
-    def is_appropriate_attire(self, img: Image, threshold: float = 60.0) -> bool:
+    def is_appropriate_attire(self, img: Image, threshold: float = None) -> bool:
         """
         Check if an image has appropriate attire for a LinkedIn profile.
         
         Args:
             img (Image): An image object to check
-            threshold (float): Minimum score threshold (0-100). Default 60.
+            threshold (float): Minimum score threshold (0-100). Defaults to env var.
             
         Returns:
             bool: True if attire is appropriate, False otherwise
         """
+        if threshold is None:
+            threshold = float(os.getenv("ATTIRE_DEFAULT_THRESHOLD", "60.0"))
         score = self.score_image(img)
         return score >= threshold
 
-    def check_attire_appropriateness(self, img: Image, threshold: float = 60.0):
+    def check_attire_appropriateness(self, img: Image, threshold: float = None):
         """
         Check attire appropriateness and return both score and pass/fail result.
         Follows the pattern of other services like check_sharpness().
         
         Args:
             img (Image): An image object to check
-            threshold (float): Minimum score threshold (0-100). Default 60.
+            threshold (float): Minimum score threshold (0-100). Defaults to env var.
             
         Returns:
             tuple: (is_appropriate, score)
         """
+        if threshold is None:
+            threshold = float(os.getenv("ATTIRE_DEFAULT_THRESHOLD", "60.0"))
         score = self.score_image(img)
         is_appropriate = score >= threshold
         return is_appropriate, score 

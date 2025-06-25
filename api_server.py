@@ -14,6 +14,10 @@ import numpy as np
 import random
 import signal
 from io import BytesIO
+from dotenv import load_dotenv
+
+# Load environment variables first
+load_dotenv()
 
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
@@ -22,16 +26,17 @@ import cv2
 from PIL import Image as PILImage
 
 # --- DETERMINISTIC EXECUTION SETUP ---
-np.random.seed(42)
-random.seed(42)
-os.environ['PYTHONHASHSEED'] = '42'
+random_seed = int(os.getenv("RANDOM_SEED", "42"))
+np.random.seed(random_seed)
+random.seed(random_seed)
+os.environ['PYTHONHASHSEED'] = os.getenv("PYTHON_HASH_SEED", "42")
 
 # Add PyTorch deterministic behavior
 import torch
-torch.manual_seed(42)
+torch.manual_seed(random_seed)
 if torch.cuda.is_available():
-    torch.cuda.manual_seed(42)
-    torch.cuda.manual_seed_all(42)
+    torch.cuda.manual_seed(random_seed)
+    torch.cuda.manual_seed_all(random_seed)
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
@@ -59,10 +64,10 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend communication
 
 # Configuration
-UPLOAD_FOLDER = 'data/temp_uploads'
-RESULTS_FOLDER = 'data/api_results'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'}
-MAX_CONTENT_LENGTH = 100 * 1024 * 1024  # 100MB max total upload size
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "data/temp_uploads")
+RESULTS_FOLDER = os.getenv("RESULTS_FOLDER", "data/api_results") 
+ALLOWED_EXTENSIONS = set(os.getenv("ALLOWED_EXTENSIONS", "png,jpg,jpeg,gif,bmp,webp").split(","))
+MAX_CONTENT_LENGTH = int(os.getenv("MAX_UPLOAD_SIZE_MB", "100")) * 1024 * 1024
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
@@ -128,7 +133,7 @@ def image_to_base64(image: Image) -> str:
     
     # Save to bytes buffer
     buffer = BytesIO()
-    pil_image.save(buffer, format='JPEG', quality=95)
+    pil_image.save(buffer, format='JPEG', quality=int(os.getenv("JPEG_QUALITY", "95")))
     buffer.seek(0)
     
     # Encode to base64
@@ -144,7 +149,7 @@ def save_image_for_serving(image: Image, filename: str) -> str:
     
     # Convert to PIL and save
     pil_image = PILImage.fromarray(image.pixels)
-    pil_image.save(results_path, 'JPEG', quality=95)
+    pil_image.save(results_path, 'JPEG', quality=int(os.getenv("JPEG_QUALITY", "95")))
     
     return f"/api/image/{filename}"
 
@@ -529,4 +534,4 @@ if __name__ == '__main__':
     print("="*60)
     
     # Run development server (threading disabled for testing)
-    app.run(debug=True, host='0.0.0.0', port=5002, threaded=False)
+    app.run(debug=True, host='0.0.0.0', port=int(os.getenv("API_SERVER_PORT", "5002")), threaded=False)

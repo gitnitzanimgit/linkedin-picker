@@ -3,6 +3,10 @@ from insightface.app import FaceAnalysis
 import torch
 import os
 import numpy as np
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 
 class FaceEngine:
@@ -27,15 +31,20 @@ class FaceEngine:
             cls._instance._init_engine(*args, **kwargs)
         return cls._instance
 
-    def _init_engine(self, model_name: str = "buffalo_l", ctx_id: int = 0):
+    def _init_engine(self, model_name: str = None, ctx_id: int = None):
         """
         Load and prepare InsightFace model on first instantiation.
 
         Args:
-            model_name (str): Model name from the InsightFace model zoo.
-            ctx_id (int): 0 = CPU, 1+ = GPU index if using CUDA.
+            model_name (str): Model name from the InsightFace model zoo. Defaults to env var.
+            ctx_id (int): 0 = CPU, 1+ = GPU index if using CUDA. Defaults to env var.
                          Note: MPS (Apple Silicon) not supported by InsightFace.
         """
+        # Load from environment variables if not provided
+        if model_name is None:
+            model_name = os.getenv("FACE_ENGINE_MODEL", "buffalo_l")
+        if ctx_id is None:
+            ctx_id = int(os.getenv("FACE_ENGINE_CTX_ID", "0"))
         # ─── DEVICE SELECTION ────────────────────────────────────────────────
         # Priority: CUDA -> CPU -> MPS
         if torch.cuda.is_available():
