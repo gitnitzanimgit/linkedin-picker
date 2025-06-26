@@ -142,10 +142,7 @@ class ScoredImageService:
         Returns:
             List[ScoredImage]: Top N images only
         """
-        if len(scored_images) <= n:
-            return scored_images
-        
-        # Sort by final score and keep only top N
+        # Always sort by final score and keep only top N
         top_images = self.repository.get_top_n(scored_images, n, "final_score")
         
         # Log which images were kept vs discarded
