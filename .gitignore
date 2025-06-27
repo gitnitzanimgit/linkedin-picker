@@ -13,10 +13,8 @@ ENV/
 .env.local
 
 # Model files (too large for GitHub)
-*.pth
 *.pkl
 *.h5
-*.onnx
 
 # Data directories
 data/
