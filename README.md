@@ -28,7 +28,7 @@ LinkedInPicker finds and optimizes photos through a sophisticated multi-stage pi
 - **InsightFace (buffalo_l model)** for robust face detection and landmark extraction
 - **Identity matching** using validated reference embeddings with configurable similarity thresholds
 - Validates face pose and facial quality metrics
-- Supports multi-face images with automatic largest face selection
+- Supports multi-face images with automatic target person identification
 
 ### 🎨 Background Processing
 - **MediaPipe Selfie Segmentation** for precise person/background separation
@@ -51,7 +51,7 @@ This design philosophy prioritizes precision over recall - it's better to reject
 - **CLIP-based semantic evaluation** for professional attire appropriateness
 
 ### ⚡ CLIP-Based Gradient Descent Image Optimization
-- **Optimization target**: "Subject studio-style lit, face clear and crisp, Overall image brightness is high"
+- **Optimization target**: Professional studio-style lighting and clarity
 - **Learnable parameters**: Brightness, contrast, and gamma adjustments
 - **Optimization**: SGD with momentum, adaptive learning rate scheduling, early stopping
 - **Parameter space**: Uses hyperbolic tangent mapping to constrain adjustments within realistic bounds
@@ -120,7 +120,7 @@ The system will identify all photos containing the target person, rank them by L
 2. **CLIP encoding**: Target prompt and current image
 3. **Gradient descent**: GD optimization of semantic similarity
 4. **Learning rate scheduling**: Adaptive reduction with patience
-5. **Early stopping**: Convergence detection with improvement threshold
+5. **Early stopping**: Stops optimization when no further improvement is detected
 
 ## License
 
