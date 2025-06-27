@@ -22,7 +22,7 @@ class LinkedInPhotoService:
     """
     
     def __init__(self, model_path: str | Path | None = None):
-        self.model_path = Path(model_path or os.getenv("LINKEDIN_MODEL_PATH", "linkedin_resnet18_cost_min.pth"))
+        self.model_path = Path(model_path or os.getenv("LINKEDIN_MODEL_PATH", "models/linkedin_resnet18_cost_min.pth"))
         self.model = None
         self.preprocess = None
         self.threshold = None
