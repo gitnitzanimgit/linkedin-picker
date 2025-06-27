@@ -1,163 +1,130 @@
-# LinkedIn Photo Optimizer
+# LinkedInPicker - AI-Powered Professional Photo Enhancement Pipeline
 
-An AI-powered system that automatically selects and enhances the best LinkedIn profile photos from a batch of images. Uses advanced computer vision, face recognition, and CLIP-guided enhancement to create professional headshots.
+An intelligent photo processing pipeline that automatically transforms casual photos into LinkedIn-ready professional headshots using computer vision and machine learning.
 
-## Features
+## 🎬 Demo
 
-- **Reference-based face matching** - Upload a reference photo to find similar faces
-- **Automatic face detection and cropping** - Smart cropping to professional headshot format
-- **AI background replacement** - Clean, professional backgrounds
-- **LinkedIn-optimized scoring** - AI models trained to score photo professionalism
-- **CLIP-guided enhancement** - Automatic brightness/contrast/gamma optimization
-- **Web interface** - React frontend with step-by-step processing
-- **REST API** - Full API access for programmatic use
+<video width="600" controls>
+  <source src="Live_demo_linkedin.mp4" type="video/mp4">
+</video>
 
-## Quick Start
+## 📋 Overview
 
-### 1. Installation
+LinkedInPicker processes photos through a sophisticated multi-stage pipeline that:
 
-```bash
-git clone https://github.com/yourusername/LinkedInPicker
-cd LinkedInPicker
-pip install -r requirements_minimal.txt
+0. **Validates reference image quality** to ensure reliable identity matching
+1. **Detects and crops faces** using InsightFace with optimal LinkedIn-style framing
+2. **Separates background from subject** using MediaPipe selfie segmentation
+3. **Applies professional background blur** with Laplacian variance-based downsampling
+4. **Scores photo quality** using a custom fine-tuned ResNet18 model trained on FFHQ dataset
+5. **Evaluates attire appropriateness** using CLIP-based semantic analysis
+6. **Enhances lighting and color** through CLIP-guided gradient descent optimization
+7. **Provides both web API and batch processing** interfaces
+
+## ⚙️ Technical Implementation
+
+### 🔍 Reference Image Validation
+- **Quality-gated embedding extraction**: Validates reference image meets strict criteria (single face, detection confidence, pose alignment, sharpness, lighting) before generating face embeddings
+- **Prevents cascade failures**: Poor reference images lead to unreliable identity matching, so validation acts as a quality gate protecting the entire pipeline
+- **Six-point validation**: Face count → detection confidence → size ratio → pose angles → Laplacian sharpness → brightness levels
+
+### 👤 Face Detection & Analysis
+- **InsightFace (buffalo_l model)** for robust face detection and landmark extraction
+- **Identity matching** using validated reference embeddings with configurable similarity thresholds
+- Validates face pose, age range (18-65), and facial quality metrics
+- Supports multi-face images with automatic largest face selection
+
+### 🎨 Background Processing
+- **MediaPipe Selfie Segmentation** for precise person/background separation
+- **Professional blur effect**: Images are downscaled, blurred, then upscaled to create a creamy, DSLR-like background blur
+- Gaussian edge feathering for smooth alpha blending
+
+### 🎯 LinkedIn Quality Model
+- **Custom ResNet18** fine-tuned on preprocessed FFHQ dataset
+- **Data augmentation pipeline**: RandomResizedCrop, RandomHorizontalFlip, ColorJitter, RandomErasing
+- **Business-optimized loss function**: Weighted Binary Cross-Entropy with 3:1 False Positive to False Negative cost ratio
+
+```
+Cost Function: L = 3×FP + 1×FN
 ```
 
-### 2. Download Models
+This design philosophy prioritizes precision over recall - it's better to reject a good photo than accept a poor one for professional use.
 
-Download the required model files and place them in the project root:
+### ⚡ CLIP-Guided Enhancement
+- **Optimization target**: "Subject studio-style lit, face clear and crisp, Overall image brightness is high"
+- **Learnable parameters**: Brightness, contrast, and gamma adjustments
+- **Optimization**: SGD with momentum, adaptive learning rate scheduling, early stopping
+- **Parameter space**: Uses hyperbolic tangent mapping to constrain adjustments within realistic bounds
 
-- **LinkedIn Classifiers**:
-  - `linkedin_efficientb0_cost_min.pth` (recommended)
-  - `linkedin_resnet18_cost_min.pth` (faster alternative)
+### 👔 Attire & Expression Analysis
+- **CLIP-based semantic evaluation** for professional attire appropriateness
+- **Facial neutrality scoring** using contrastive prompts (neutral vs. non-neutral expressions)
+- Configurable scoring thresholds for different quality standards
 
-### 3. Run the Application
+## 🚀 Installation & Setup
 
-**Web Interface:**
+### Prerequisites
+- Python 3.9+
+- CUDA-capable GPU (optional, will fallback to CPU)
+- 8GB+ RAM recommended
+
+### 1. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Model Setup
+All required models are included or downloaded automatically:
+
+- **LinkedIn Quality Model**: Pre-trained `linkedin_resnet18_cost_min.pth` (included in repository)
+- **InsightFace Models**: Downloaded automatically on first use
+- **MediaPipe Segmentation**: Downloaded automatically on first use
+- **CLIP Models**: Downloaded automatically on first use
+
+## 💻 Usage
+
+### 🌐 Web Interface (Recommended)
+
+1. **Start the API server**:
 ```bash
 python api_server.py
 ```
-Server runs on `http://localhost:5002`
 
-**CLI Mode:**
+2. **Start the frontend** (in a separate terminal):
 ```bash
-python main.py
+cd frontend
+python -m http.server 8080
 ```
 
-**Single Image Enhancement:**
+3. **Access the application**:
+Open your browser to `http://localhost:8080`
+
+### 📦 Batch Processing (Optional)
+For processing large batches of images offline:
+
 ```bash
-python enhance_single.py path/to/your/image.jpg
+# Place reference image in data/target_image/very_good_image.jpeg
+# Place batch images in data/image_batch/
+python scripts/batch_process.py
 ```
 
-## API Documentation
+Results will be saved to `data/enhanced_gallery/`
 
-The step-by-step API provides full control over each processing step:
+## 🔬 Algorithm Details
 
-1. **POST /api/validate-reference** - Validate reference image
-2. **POST /api/load-images** - Upload batch images  
-3. **POST /api/detect-and-crop** - Face detection and cropping
-4. **POST /api/replace-backgrounds** - Background replacement
-5. **POST /api/score-and-filter** - Score and select top 5 images
-6. **POST /api/enhance-images** - Final enhancement
+### Quality Scoring Pipeline
+1. **Face validation**: Pose angle, brightness, sharpness checks
+2. **LinkedIn model inference**: Custom ResNet18 with 0-100 quality score
+3. **Attire assessment**: CLIP semantic similarity scoring
+4. **Expression neutrality**: Contrastive prompt evaluation
+5. **Composite scoring**: Weighted combination with configurable thresholds
 
-### Example Usage
-
-```python
-import requests
-
-# 1. Start session with reference image
-files = {'reference_image': open('reference.jpg', 'rb')}
-response = requests.post('http://localhost:5002/api/validate-reference', files=files)
-session_id = response.json()['session_id']
-
-# 2. Upload batch images
-files = [('batch_images', open(f'photo{i}.jpg', 'rb')) for i in range(10)]
-requests.post('http://localhost:5002/api/load-images', 
-              files=files, 
-              data={'session_id': session_id})
-
-# 3. Process through pipeline
-for endpoint in ['detect-and-crop', 'replace-backgrounds', 'score-and-filter', 'enhance-images']:
-    requests.post(f'http://localhost:5002/api/{endpoint}', 
-                  json={'session_id': session_id})
-```
-
-## Architecture
-
-Clean, modular design with separation of concerns:
-
-```
-├── models/           # Data models (Image, Face, ScoredImage, etc.)
-├── services/         # Business logic layer
-├── repositories/     # Data access layer  
-├── pipeline/         # Processing pipelines
-├── frontend/         # React web interface
-└── api_server.py     # Flask REST API server
-```
-
-## Development
-
-### Project Structure
-
-```
-LinkedInPicker/
-├── models/
-│   ├── image.py              # Core image data model
-│   ├── face.py              # Face detection/recognition
-│   ├── scored_image.py      # Scored image container
-│   └── clip_model.py        # CLIP model wrapper
-├── services/
-│   ├── image_service.py     # Image operations
-│   ├── face_service.py      # Face processing
-│   ├── segmentation_service.py  # Background segmentation
-│   └── linkedin_photo_service.py # LinkedIn scoring
-├── pipeline/
-│   ├── detect_and_crop.py   # Face detection pipeline
-│   ├── background_replacer.py   # Background replacement
-│   ├── final_scorer.py      # Scoring pipeline
-│   └── top_image_enhancer.py    # Enhancement pipeline
-├── repositories/
-│   ├── image_repository.py  # Image data access
-│   └── face_repository.py   # Face data access
-└── frontend/                # React web interface
-```
-
-### Configuration
-
-Key parameters can be tuned in the service classes:
-- Face similarity threshold: `0.3` (in face matching)
-- LinkedIn score weights: Configurable in scoring service
-- Enhancement iterations: `200` steps (in enhancement service)
-
-### Hardware Requirements
-
-- **CPU**: Modern multi-core processor
-- **RAM**: 8GB+ recommended  
-- **GPU**: Optional (CUDA/MPS supported for faster processing)
-- **Storage**: 2GB+ for models and temporary files
-
-## Troubleshooting
-
-### Common Issues
-
-**Dark enhanced images:**
-- Threading is disabled by default for consistent results
-- PyTorch deterministic settings ensure reproducible enhancement
-
-**Memory issues:**
-- Reduce batch size
-- Process images sequentially
-
-**Model loading errors:**
-- Verify model files are downloaded and in correct location
-- Check file permissions
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes
-4. Add tests for new functionality
-5. Submit a pull request
+### Enhancement Process
+1. **Parameter initialization**: Brightness, contrast, gamma at neutral (0.0)
+2. **CLIP encoding**: Target prompt and current image
+3. **Gradient descent**: SGD optimization of visual similarity
+4. **Learning rate scheduling**: Adaptive reduction with patience
+5. **Early stopping**: Convergence detection with improvement threshold
 
 ## License
 
@@ -165,7 +132,7 @@ MIT License - see LICENSE file for details.
 
 ## Acknowledgments
 
-- Built with PyTorch, OpenCV, and CLIP
-- Uses MediaPipe for face detection
-- Background segmentation via custom models
-- React frontend for user interface
+- InsightFace team for robust face detection
+- OpenAI for CLIP models
+- MediaPipe team for segmentation models
+- FFHQ dataset creators for training data
