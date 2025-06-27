@@ -4,9 +4,7 @@ An intelligent photo processing pipeline that automatically transforms casual ph
 
 ## 🎬 Demo
 
-<video width="600" controls>
-  <source src="Live_demo_linkedin.mp4" type="video/mp4">
-</video>
+[![Demo Video](https://img.youtube.com/vi/AVd5tHkiXtU/0.jpg)](https://youtu.be/AVd5tHkiXtU)
 
 ## 📋 Overview
 
