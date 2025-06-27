@@ -56,13 +56,7 @@ def enhance_top_images(
         print("No top images to enhance.")
         return []
     
-    print(f"\n{'='*60}")
-    print(f" ENHANCING TOP {len(top_scored_gallery)} IMAGES - FINAL STEP!")
-    print(f"{'='*60}")
-    
     for i, scored_img in enumerate(top_scored_gallery, 1):
-        print(f"    Enhancing image {i}/{len(top_scored_gallery)}")
-        
         # Apply enhancement to get new pixels
         enhanced_img = enhancement_service._optimise(scored_img.image)
         
@@ -73,14 +67,7 @@ def enhance_top_images(
         filename = f"enhanced_{uuid.uuid1().hex}{ext}"
         enhanced_path = enhanced_dir / filename
         scored_img.image.path = enhanced_path
-        
-        print(f"    Enhanced image {i} ready: {filename}")
-    
-    print(f"\n FINAL ENHANCEMENT COMPLETE!")
-    print(f"    Enhanced images will be saved to: {enhanced_dir}")
-    print(f"    {len(top_scored_gallery)} images ready for LinkedIn!")
-    print(f"{'='*60}\n")
-    
+
     return top_scored_gallery
 
 

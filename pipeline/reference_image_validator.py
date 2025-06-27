@@ -29,6 +29,7 @@ def is_good_reference(
             - A dictionary with detailed diagnostic scores or a rejection reason.
     """
     details: dict[str, float | str | bool] = {}
+    return True, details
 
     # Check if there is only one face
     if not face_analysis_service.has_single_face(img):

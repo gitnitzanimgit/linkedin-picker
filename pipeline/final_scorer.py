@@ -13,7 +13,6 @@ from services.attire_service import AttireService
 from services.image_service import ImageService
 from services.scored_image_service import ScoredImageService
 
-# ------------------------------------------------------------------
 # env‑vars
 load_dotenv()
 SCORED_DIR = os.getenv("SCORED_DIR_PATH", "data/scored_gallery")
@@ -23,7 +22,6 @@ OUTPUT_EXT = os.getenv("OUTPUT_IMG_EXT", ".jpg")
 LINKEDIN_THRESHOLD = float(os.getenv("LINKEDIN_THRESHOLD", "60.0"))
 ATTIRE_THRESHOLD = float(os.getenv("ATTIRE_THRESHOLD", "60.0"))
 
-# ------------------------------------------------------------------
 def score_final_photos(
     gallery: List[Image],
     *,
@@ -104,16 +102,12 @@ def _log_top_scoring_images(scored_gallery: List[ScoredImage], top_n: int = 5):
     
     # Sort by final score in descending order
     sorted_gallery = sorted(scored_gallery, key=lambda x: x.final_score, reverse=True)
-    
-    print(f"\n{'='*80}")
-    print(f"SCORING RESULTS - ALL {len(scored_gallery)} IMAGES:")
-    print(f"{'='*80}")
-    
+
     # Print all images with their scores
     for i, scored_img in enumerate(sorted_gallery, 1):
         path = scored_img.image.path or "No path"
         filename = Path(path).name if path else "Unknown"
-        
+
         # Highlight top N images
         if i <= top_n:
             print(f"{i:2d}.  Score: {scored_img.final_score:6.2f} | "

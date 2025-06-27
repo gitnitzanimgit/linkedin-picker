@@ -10,14 +10,12 @@ from models.image import Image
 from services.background_service import BackgroundService
 from services.image_service import ImageService
 
-# ------------------------------------------------------------------
 # env‑vars
 load_dotenv()
 PROCESSED_DIR = os.getenv("PROCESSED_DIR_PATH", "data/processed_gallery")
 OUTPUT_EXT    = os.getenv("OUTPUT_IMG_EXT", ".jpg")          # e.g. ".jpg"
 DEFAULT_BG    = (230, 230, 230)                              # LinkedIn light‑gray
 
-# ------------------------------------------------------------------
 def replace_background(
     gallery: List[Image],
     *,

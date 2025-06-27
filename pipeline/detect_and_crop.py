@@ -11,7 +11,6 @@ load_dotenv()
 PAD_SIDE_FACTOR_LINKEDIN = float(os.getenv("PAD_SIDE_FACTOR_LINKEDIN"))
 PAD_TOP_FACTOR_LINKEDIN = float(os.getenv("PAD_TOP_FACTOR_LINKEDIN"))
 PAD_BOTTOM_FACTOR_LINKEDIN = float(os.getenv("PAD_BOTTOM_FACTOR_LINKEDIN"))
-print(os.getenv("OUTPUT_IMG_EXT"))
 
 
 
@@ -31,7 +30,7 @@ def detect_and_crop(
     # Validate number of faces
     num_faces = face_analysis_service.num_faces(ref_img)
     if num_faces != 1:
-        raise ValueError("Reference image is supposed to have only one face")
+        raise ValueError(f"Reference image is supposed to have only one face {num_faces}")
 
     # Extract face from reference image
     ref_face = face_analysis_service.get_faces(ref_img)[0]

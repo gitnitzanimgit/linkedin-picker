@@ -3,10 +3,10 @@ import torch
 from pathlib import Path
 from torchvision import transforms, models
 from models.image import Image
+from models.clip_model import ClipModel
 from services.image_service import ImageService
 from services.cropping_service import CroppingService
 from services.face_analysis_service import FaceAnalysisService
-import open_clip
 from dotenv import load_dotenv
 import os
 
@@ -29,8 +29,8 @@ class LinkedInPhotoService:
         self.image_service = ImageService()
         self.cropping_service = CroppingService()
         self.face_analysis_service = FaceAnalysisService()
+        self.clip_model = ClipModel()
         self._load_model()
-        self._load_clip_model()
     
     def _load_model(self):
         """
@@ -60,23 +60,6 @@ class LinkedInPhotoService:
             transforms.Normalize(img_mean, img_std)
         ])
     
-    def _load_clip_model(self):
-        """
-        Load CLIP model for face neutrality detection.
-        """
-        # Use MPS on Apple Silicon, CUDA on NVIDIA, CPU otherwise
-        if torch.cuda.is_available():
-            self.device = "cuda"
-        elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
-            self.device = "mps"
-        else:
-            self.device = "cpu"
-        self.clip_model, _, self.clip_preprocess = open_clip.create_model_and_transforms(
-            "ViT-B-32", 
-            pretrained="laion2b_s34b_b79k"
-        )
-        self.clip_tokenizer = open_clip.get_tokenizer("ViT-B-32")
-        self.clip_model.to(self.device).eval()
     
     def score_image(self, img: Image) -> float:
         """
@@ -98,8 +81,7 @@ class LinkedInPhotoService:
         
         # Use the largest face for scoring
         largest_face = max(faces, key=lambda f: (f.bbox[2] - f.bbox[0]) * (f.bbox[3] - f.bbox[1]))
-        
-        # Use FFHQ-style face cropping (proper face model padding)
+
         # Default PAD_FACTOR_FACE_MODEL if not set in env
         pad_factor_face_model = float(os.getenv("PAD_FACTOR_FACE_MODEL", "0.3"))
         
@@ -132,8 +114,6 @@ class LinkedInPhotoService:
         Returns probability [%] that the face shows a *non-neutral* expression.
         Higher = less neutral  (worse for LinkedIn-style portraits).
         """
-        pil_img = self.image_service.to_pil_image(img).convert("RGB")
-
         prompts = [
             # index 0 – neutral (positive for LinkedIn)
             "A completely neutral facial expression",
@@ -141,23 +121,21 @@ class LinkedInPhotoService:
             "An even slightly non-neutral facial expression",
         ]
 
-        tokens = self.clip_tokenizer(prompts).to(self.device)
-        image_tensor = self.clip_preprocess(pil_img).unsqueeze(0).to(self.device)
+        # Convert image to CLIP-ready tensor (224x224)
+        img_tensor = self.image_service.center_crop_224(img, self.clip_model.device)
 
         with torch.no_grad():
-            img_feat = self.clip_model.encode_image(image_tensor)
-            txt_feat = self.clip_model.encode_text(tokens)
-            img_feat /= img_feat.norm(dim=-1, keepdim=True)
-            txt_feat /= txt_feat.norm(dim=-1, keepdim=True)
+            img_feat = self.clip_model.encode_image(img_tensor)
+            txt_feat_neutral = self.clip_model.encode_text(prompts[0])  
+            txt_feat_non_neutral = self.clip_model.encode_text(prompts[1])
+            txt_feat = torch.cat([txt_feat_neutral, txt_feat_non_neutral], dim=0)
+            
             sims = (img_feat @ txt_feat.T) * 100          # (1×2) logits
             probs = sims.softmax(dim=-1)                  # → probabilities
 
         raw_non_neutral = probs[0, 1].item()              # probability the face is non-neutral
         scaled_score    = raw_non_neutral * 100           # 0‥100
 
-        print(
-            f"Non-neutrality score: {scaled_score:.1f}%"
-        )
         return scaled_score
     
     def is_good_quality(self, img: Image, threshold: float | None = None) -> bool:

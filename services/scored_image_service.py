@@ -17,9 +17,7 @@ class ScoredImageService:
     """
     
     def __init__(self):
-        self.repository = ScoredImageRepository()
-        
-        # Load thresholds from environment variables
+        self.scored_image_repository = ScoredImageRepository()
         self.min_non_neutrality = float(os.getenv("MIN_NON_NEUTRALITY_THRESHOLD", "50.0"))
         self.min_linkedin_score = float(os.getenv("MIN_LINKEDIN_THRESHOLD", "1.0"))
         self.min_attire_score = float(os.getenv("MIN_ATTIRE_THRESHOLD", "60.0"))
@@ -52,46 +50,30 @@ class ScoredImageService:
         # Apply non-neutrality filter (remove too robotic faces)
         if apply_non_neutrality_filter:
             before_count = len(filtered_images)
-            filtered_images = self.repository.filter_by_non_neutrality(
+            filtered_images = self.scored_image_repository.filter_by_non_neutrality(
                 filtered_images, self.min_non_neutrality
             )
-            removed_count = before_count - len(filtered_images)
-            if removed_count > 0:
-                print(f" Filtered {removed_count} images with non-neutrality < {self.min_non_neutrality}% (too neutral/robotic)")
         
         # Apply LinkedIn quality filter
         if apply_linkedin_filter:
             before_count = len(filtered_images)
-            filtered_images = self.repository.filter_by_linkedin_score(
+            filtered_images = self.scored_image_repository.filter_by_linkedin_score(
                 filtered_images, self.min_linkedin_score
             )
-            removed_count = before_count - len(filtered_images)
-            if removed_count > 0:
-                print(f" Filtered {removed_count} images with LinkedIn score < {self.min_linkedin_score}")
         
         # Apply attire filter
         if apply_attire_filter:
             before_count = len(filtered_images)
-            filtered_images = self.repository.filter_by_attire_score(
+            filtered_images = self.scored_image_repository.filter_by_attire_score(
                 filtered_images, self.min_attire_score
             )
-            removed_count = before_count - len(filtered_images)
-            if removed_count > 0:
-                print(f" Filtered {removed_count} images with attire score < {self.min_attire_score}")
         
         # Apply final score filter
         if apply_final_filter:
             before_count = len(filtered_images)
-            filtered_images = self.repository.filter_by_final_score(
+            filtered_images = self.scored_image_repository.filter_by_final_score(
                 filtered_images, self.min_final_score
             )
-            removed_count = before_count - len(filtered_images)
-            if removed_count > 0:
-                print(f" Filtered {removed_count} images with final score < {self.min_final_score}")
-        
-        total_removed = original_count - len(filtered_images)
-        if total_removed > 0:
-            print(f" Total: {total_removed} images filtered, {len(filtered_images)} remaining")
         
         return filtered_images
     
@@ -122,7 +104,7 @@ class ScoredImageService:
             filtered_images = scored_images
         
         # Get top N by final score
-        top_photos = self.repository.get_top_n(filtered_images, count, "final_score")
+        top_photos = self.scored_image_repository.get_top_n(filtered_images, count, "final_score")
         
         return top_photos
     
@@ -143,13 +125,7 @@ class ScoredImageService:
             List[ScoredImage]: Top N images only
         """
         # Always sort by final score and keep only top N
-        top_images = self.repository.get_top_n(scored_images, n, "final_score")
-        
-        # Log which images were kept vs discarded
-        discarded_count = len(scored_images) - len(top_images)
-        if discarded_count > 0:
-            print(f" Keeping top {n} images, discarded {discarded_count} lower-scoring images")
-        
+        top_images = self.scored_image_repository.get_top_n(scored_images, n, "final_score")
         return top_images
     
     def apply_quality_filters(
@@ -192,7 +168,7 @@ class ScoredImageService:
             return
         
         # Sort by final score
-        sorted_images = self.repository.sort_by_final_score(scored_images)
+        sorted_images = self.scored_image_repository.sort_by_final_score(scored_images)
         
         print(f"\n{'='*80}")
         print(f"{title} - ALL {len(scored_images)} IMAGES:")
@@ -218,7 +194,7 @@ class ScoredImageService:
                       f"File: {filename}")
         
         # Get statistics
-        stats = self.repository.get_score_statistics(scored_images)
+        stats = self.scored_image_repository.get_score_statistics(scored_images)
         
         print(f"{'='*80}")
         print(f"MODEL OUTPUT RANGES:")

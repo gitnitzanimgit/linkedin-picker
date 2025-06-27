@@ -34,7 +34,6 @@ class ImageRepository:
 
         # ─── timeout wrapper (5 s default) ────────────────────────────────
         def _handler(signum, frame):
-            print(f"Timeout while reading {path}")  # debug line
             raise TimeoutError(f"cv2.imread timed-out after {timeout}s: {path}")
 
         signal.signal(signal.SIGALRM, _handler)
@@ -103,7 +102,6 @@ class ImageRepository:
             except Exception as err:
                 print(f"Skipping {p.name}: {err}")
 
-    # (optional) keep the old API but implement it with the iterator
     def load_dir(
         self, folder: Union[str, Path], *, recursive=False, exts=None
     ) -> List[Image]:

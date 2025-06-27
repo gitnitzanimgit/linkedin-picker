@@ -38,8 +38,6 @@ class LinkedInOptimizer {
         uploadZone.addEventListener('dragover', (e) => this.handleDragOver(e));
         uploadZone.addEventListener('drop', (e) => this.handleBatchDrop(e));
 
-        // Enhancement is now automatic, no button needed
-
         // Download and restart buttons
         const downloadBtn = document.getElementById('download-btn');
         const restartBtn = document.getElementById('restart-btn');
@@ -172,7 +170,7 @@ class LinkedInOptimizer {
             { id: 'step-2', title: '🎯 Detecting faces...', api: 'detect-and-crop' },
             { id: 'step-3', title: '🎨 Replacing backgrounds...', api: 'replace-backgrounds' },
             { id: 'step-4', title: '⭐ Scoring quality...', api: 'score-and-filter' },
-            { id: 'step-5', title: '🏆 Selecting top 5...', api: null }  // This is part of scoring
+            { id: 'step-5', title: '🏆 Selecting top 5...', api: null }
         ];
 
         const progressFill = document.getElementById('progress-fill');

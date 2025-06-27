@@ -32,19 +32,8 @@ class ImageEnhancementService:
                  clip_arch: str = None,
                  clip_pretrained: str = None,
                  prompt: str = None):
-        """
-        Initialize the ImageEnhancementService with configurable parameters.
-        
-        Args:
-            clip_arch: CLIP model architecture (defaults to env var)
-            clip_pretrained: CLIP pretrained weights (defaults to env var)  
-            prompt: Enhancement prompt (defaults to env var)
-        """
-        # Load configuration from environment variables
         self.prompt = prompt or os.getenv("ENHANCEMENT_PROMPT", 
             "Subject studio-style lit, face clear and crisp, Overall image brightness is high")
-        
-        # Optimization hyperparameters
         self.lr_start = float(os.getenv("ENHANCEMENT_LR_START", "0.005"))
         self.lr_factor = float(os.getenv("ENHANCEMENT_LR_FACTOR", "0.10"))
         self.lr_patience = int(os.getenv("ENHANCEMENT_LR_PATIENCE", "50"))
@@ -63,8 +52,6 @@ class ImageEnhancementService:
             self.clip = ClipModel(arch=clip_arch, ckpt=clip_pretrained)
         self.txt_feat = self.clip.encode_text(self.prompt)
         self.img_svc = ImageService()
-        
-        logger.info(f"ImageEnhancementService initialized with prompt: {self.prompt[:50]}...")
 
     # ─── Public API ────────────────────────────────────────────────
     def optimise_file(self, path: Union[str, Path]) -> Path:
@@ -140,7 +127,6 @@ class ImageEnhancementService:
         enhanced_images = []
         
         for i, img in enumerate(images, 1):
-            print(f"   Enhancing image {i}/{len(images)}")
             enhanced_img = self._optimise(img)
             enhanced_images.append(enhanced_img)
         

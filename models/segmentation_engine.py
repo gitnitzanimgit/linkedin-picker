@@ -1,20 +1,3 @@
-# from pathlib import Path
-# import cv2
-#
-# class SegmentationEngine:
-#     _MODEL_PATH = Path(__file__).parent / "u2net_human_seg.onnx"
-#     _instance = None
-#
-#     def __new__(cls):
-#         if cls._instance is None:
-#             cls._instance = super().__new__(cls)
-#             cls._instance._init_runtime()
-#         return cls._instance
-#
-#     def _init_runtime(self):
-#         """Heavy ONNX load – runs once per Python process."""
-#         self.net = cv2.dnn.readNetFromONNX(str(self._MODEL_PATH))
-
 # models/segmentation_engine.py
 """
 Singleton wrapper around MediaPipe Selfie Segmentation.
@@ -37,7 +20,6 @@ class SegmentationEngine:
 
     # --------------------------------------------------
     def _init_runtime(self) -> None:
-        # model_selection=1  → landscape / selfie quality
         self._mp_seg = mp.solutions.selfie_segmentation.SelfieSegmentation(
             model_selection=1
         )
