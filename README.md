@@ -1,4 +1,4 @@
-# LinkedInPicker - AI-Powered Professional Photo Enhancement Pipeline
+# LinkedInPicker - AI-Powered LinkedIn Profile Picture Finder & Optimizer Web App
 
 An intelligent photo finder and optimizer that automatically identifies, ranks, and enhances the best photos of a person from a gallery for professional LinkedIn profiles using computer vision and machine learning.
 
