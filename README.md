@@ -66,7 +66,7 @@ This design philosophy prioritizes precision over recall - it's better to reject
 
 ### 1. Install Dependencies
 ```bash
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 ```
 
 ### 2. Model Setup
@@ -98,10 +98,32 @@ Open your browser to `http://localhost:8080`
 ### 📦 Batch Processing (Optional)
 For finding and enhancing the best photos of a target person from large photo galleries:
 
+#### Setup
+Before running the batch processor, create the required directories and add your data:
+
 ```bash
-# Place reference image of target person in data/target_image/very_good_image.jpeg
-# Place photo gallery (containing the target person) in data/image_batch/
-python cli/batch_process.py
+# Create directories
+mkdir -p data/target_image data/image_batch
+
+# Add your reference image (rename as needed)
+cp /path/to/your/reference.jpg data/target_image/very_good_image.jpeg
+
+# Add photos to process
+cp /path/to/your/photos/* data/image_batch/
+
+# Run the processor
+python -m backend.cli.batch_process
+```
+
+**Required directory structure:**
+```
+data/
+├── target_image/
+│   └── very_good_image.jpeg  # Reference photo of target person
+└── image_batch/              # Gallery photos to process
+    ├── photo1.jpg
+    ├── photo2.png
+    └── ...
 ```
 
 The system will identify all photos containing the target person, rank them by LinkedIn suitability, enhance the best candidates, and save results to `data/enhanced_gallery/`
