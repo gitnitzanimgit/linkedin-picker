@@ -6,7 +6,7 @@ from PIL import Image as PILImage
 from dotenv import load_dotenv
 import os
 import signal
-from models.image import Image  # adjust if path differs
+from ..models.image import Image  # adjust if path differs
 
 # Load environment variables
 load_dotenv()

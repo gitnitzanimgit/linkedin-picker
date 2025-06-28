@@ -1,9 +1,9 @@
 import numpy as np
-from models.image import Image
-from models.face import Face
-from services.face_service import FaceService
-from services.image_service import ImageService
-import os
+from ..models.image import Image
+from ..models.face import Face
+from .face_service import FaceService
+from .image_service import ImageService
+
 
 class CroppingService:
     def __init__(self):

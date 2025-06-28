@@ -1,4 +1,4 @@
-from models.face import Face
+from ..models.face import Face
 import numpy as np
 from typing import Tuple
 

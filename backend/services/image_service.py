@@ -3,14 +3,14 @@ from typing import Iterable, List, Union, Iterator
 import cv2
 import os
 import numpy as np
-from models.image import Image
-from models.scored_image import ScoredImage
-from repositories.image_repository import ImageRepository
+from ..models.image import Image
+from ..models.scored_image import ScoredImage
+from ..repositories.image_repository import ImageRepository
 from dotenv import load_dotenv
 import torch
 import torchvision.transforms as T
 from PIL import Image as PILImage
-from models.image_adjustments import BrightnessContrastGamma
+from ..models.image_adjustments import BrightnessContrastGamma
 
 # Load environment variables
 load_dotenv()

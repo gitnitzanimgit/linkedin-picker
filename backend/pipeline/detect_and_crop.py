@@ -1,7 +1,7 @@
-from services.face_analysis_service import FaceAnalysisService
-from services.cropping_service import CroppingService
-from services.image_service import ImageService
-from models.image import Image
+from ..services.face_analysis_service import FaceAnalysisService
+from ..services.cropping_service import CroppingService
+from ..services.image_service import ImageService
+from ..models.image import Image
 from dotenv import load_dotenv
 import os
 import uuid

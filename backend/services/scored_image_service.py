@@ -3,8 +3,8 @@ from typing import List
 from pathlib import Path
 from dotenv import load_dotenv
 
-from models.scored_image import ScoredImage
-from repositories.scored_image_repository import ScoredImageRepository
+from ..models.scored_image import ScoredImage
+from ..repositories.scored_image_repository import ScoredImageRepository
 
 # Load environment variables
 load_dotenv()

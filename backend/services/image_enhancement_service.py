@@ -9,10 +9,10 @@ import torch
 from tqdm import trange
 from dotenv import load_dotenv
 
-from models.image import Image
-from models.image_adjustments import BrightnessContrastGamma
-from models.clip_model import ClipModel
-from services.image_service import ImageService
+from ..models.image import Image
+from ..models.image_adjustments import BrightnessContrastGamma
+from ..models.clip_model import ClipModel
+from .image_service import ImageService
 
 # Load environment variables
 load_dotenv()

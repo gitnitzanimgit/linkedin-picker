@@ -2,11 +2,11 @@ from __future__ import annotations
 import torch
 from pathlib import Path
 from torchvision import transforms, models
-from models.image import Image
-from models.clip_model import ClipModel
-from services.image_service import ImageService
-from services.cropping_service import CroppingService
-from services.face_analysis_service import FaceAnalysisService
+from ..models.image import Image
+from ..models.clip_model import ClipModel
+from .image_service import ImageService
+from .cropping_service import CroppingService
+from .face_analysis_service import FaceAnalysisService
 from dotenv import load_dotenv
 import os
 
@@ -22,7 +22,7 @@ class LinkedInPhotoService:
     """
     
     def __init__(self, model_path: str | Path | None = None):
-        self.model_path = Path(model_path or os.getenv("LINKEDIN_MODEL_PATH", "models/linkedin_resnet18_cost_min.pth"))
+        self.model_path = Path(model_path or os.getenv("LINKEDIN_MODEL_PATH", "backend/models/linkedin_resnet18_cost_min.pth"))
         self.model = None
         self.preprocess = None
         self.threshold = None

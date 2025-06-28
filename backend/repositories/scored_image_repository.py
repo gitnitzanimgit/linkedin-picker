@@ -1,5 +1,5 @@
 from typing import List
-from models.scored_image import ScoredImage
+from ..models.scored_image import ScoredImage
 
 
 class ScoredImageRepository:

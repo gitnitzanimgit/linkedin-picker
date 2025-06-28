@@ -1,8 +1,8 @@
 # services/segmentation_service.py
 from typing import Dict
 import numpy as np
-from models.image import Image
-from repositories.segmentation_repository import SegmentationRepository
+from ..models.image import Image
+from ..repositories.segmentation_repository import SegmentationRepository
 
 class SegmentationService:
     """

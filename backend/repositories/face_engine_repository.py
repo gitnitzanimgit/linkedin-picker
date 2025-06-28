@@ -1,4 +1,4 @@
-from models.face_engine import FaceEngine
+from ..models.face_engine import FaceEngine
 import numpy as np
 from insightface.app.common import Face
 from typing import List

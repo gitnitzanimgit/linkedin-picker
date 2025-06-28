@@ -1,7 +1,7 @@
 from typing import Tuple
-from models.image import Image
-from services.image_service import ImageService
-from services.face_analysis_service import FaceAnalysisService
+from ..models.image import Image
+from ..services.image_service import ImageService
+from ..services.face_analysis_service import FaceAnalysisService
 
 
 def is_good_reference(
@@ -29,7 +29,6 @@ def is_good_reference(
             - A dictionary with detailed diagnostic scores or a rejection reason.
     """
     details: dict[str, float | str | bool] = {}
-    return True, details
 
     # Check if there is only one face
     if not face_analysis_service.has_single_face(img):

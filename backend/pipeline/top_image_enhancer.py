@@ -10,9 +10,9 @@ from pathlib import Path
 from typing import List
 from dotenv import load_dotenv
 
-from models.scored_image import ScoredImage
-from services.image_service import ImageService
-from services.image_enhancement_service import ImageEnhancementService
+from ..models.scored_image import ScoredImage
+from ..services.image_service import ImageService
+from ..services.image_enhancement_service import ImageEnhancementService
 
 # Load environment variables
 load_dotenv()

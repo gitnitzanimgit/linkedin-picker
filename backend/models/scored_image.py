@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from models.image import Image
+from .image import Image
 
 
 @dataclass

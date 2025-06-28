@@ -1,7 +1,7 @@
 # repositories/segmentation_repository.py
 import cv2
 import numpy as np
-from models.segmentation_engine import SegmentationEngine
+from ..models.segmentation_engine import SegmentationEngine
 
 class SegmentationRepository:
     """

@@ -23,11 +23,17 @@ logging.basicConfig(
 )
 # ───────────────────────────────────────────
 
-from pipeline.detect_and_crop import detect_and_crop
-from pipeline.background_replacer import replace_background
-from pipeline.final_scorer import score_final_photos
-from pipeline.top_image_enhancer import enhance_top_images, log_final_results
-from services.image_service import ImageService
+import sys
+from pathlib import Path
+
+# Add parent directory to path so we can import from backend
+sys.path.append(str(Path(__file__).parent.parent))
+
+from backend.pipeline.detect_and_crop import detect_and_crop
+from backend.pipeline.background_replacer import replace_background
+from backend.pipeline.final_scorer import score_final_photos
+from backend.pipeline.top_image_enhancer import enhance_top_images, log_final_results
+from backend.services.image_service import ImageService
 
 image_service = ImageService()
 

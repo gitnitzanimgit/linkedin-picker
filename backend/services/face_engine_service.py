@@ -1,5 +1,5 @@
-from repositories.face_engine_repository import FaceEngineRepository
-from models.image import Image
+from ..repositories.face_engine_repository import FaceEngineRepository
+from ..models.image import Image
 
 
 class FaceEngineService:

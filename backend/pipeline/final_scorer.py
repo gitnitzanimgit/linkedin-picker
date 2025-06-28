@@ -6,12 +6,12 @@ from typing import List
 
 from dotenv import load_dotenv
 
-from models.image import Image
-from models.scored_image import ScoredImage
-from services.linkedin_photo_service import LinkedInPhotoService
-from services.attire_service import AttireService
-from services.image_service import ImageService
-from services.scored_image_service import ScoredImageService
+from ..models.image import Image
+from ..models.scored_image import ScoredImage
+from ..services.linkedin_photo_service import LinkedInPhotoService
+from ..services.attire_service import AttireService
+from ..services.image_service import ImageService
+from ..services.scored_image_service import ScoredImageService
 
 # env‑vars
 load_dotenv()

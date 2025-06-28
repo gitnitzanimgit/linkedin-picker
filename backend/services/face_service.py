@@ -1,5 +1,5 @@
-from models.face import Face
-from repositories.face_repository import FaceRepository
+from ..models.face import Face
+from ..repositories.face_repository import FaceRepository
 import numpy as np
 from typing import Tuple
 

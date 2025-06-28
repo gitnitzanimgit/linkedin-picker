@@ -2,9 +2,9 @@ from typing import Tuple
 import numpy as np
 import cv2
 
-from models.image import Image
-from services.segmentation_service import SegmentationService
-from services.face_analysis_service import FaceAnalysisService
+from ..models.image import Image
+from .segmentation_service import SegmentationService
+from .face_analysis_service import FaceAnalysisService
 
 
 class BackgroundService:

@@ -1,8 +1,8 @@
 from __future__ import annotations
 import torch
 import open_clip
-from models.image import Image
-from services.image_service import ImageService
+from ..models.image import Image
+from .image_service import ImageService
 from dotenv import load_dotenv
 import os
 

@@ -4,7 +4,7 @@ An intelligent photo finder and optimizer that automatically identifies, ranks, 
 
 ## 🎬 Demo
 
-[![Demo Video](https://img.youtube.com/vi/AVd5tHkiXtU/0.jpg)](https://youtu.be/AVd5tHkiXtU)
+[![Demo Video](https://img.youtube.com/vi/VxDUSMp2B5s/0.jpg)](https://youtu.be/VxDUSMp2B5s)
 
 ## 📋 Overview
 
@@ -66,13 +66,13 @@ This design philosophy prioritizes precision over recall - it's better to reject
 
 ### 1. Install Dependencies
 ```bash
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 ```
 
 ### 2. Model Setup
 All required models are included or downloaded automatically:
 
-- **LinkedIn Quality Model**: Pre-trained `linkedin_resnet18_cost_min.pth` (included in repository)
+- **LinkedIn Quality Model**: Pre-trained `linkedin_resnet18_cost_min.pth` (included in backend/models/)
 - **InsightFace Models**: Downloaded automatically on first use
 - **MediaPipe Segmentation**: Downloaded automatically on first use
 - **CLIP Models**: Downloaded automatically on first use
@@ -83,7 +83,7 @@ All required models are included or downloaded automatically:
 
 1. **Start the API server**:
 ```bash
-python api_server.py
+python -m backend.app
 ```
 
 2. **Start the frontend** (in a separate terminal):
@@ -101,7 +101,7 @@ For finding and enhancing the best photos of a target person from large photo ga
 ```bash
 # Place reference image of target person in data/target_image/very_good_image.jpeg
 # Place photo gallery (containing the target person) in data/image_batch/
-python scripts/batch_process.py
+python cli/batch_process.py
 ```
 
 The system will identify all photos containing the target person, rank them by LinkedIn suitability, enhance the best candidates, and save results to `data/enhanced_gallery/`

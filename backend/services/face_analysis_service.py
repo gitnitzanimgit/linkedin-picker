@@ -1,10 +1,10 @@
 from __future__ import annotations
 import numpy as np
-from models.image import Image
-from models.face_engine import FaceEngine
-from models.face import Face
-from services.face_engine_service import FaceEngineService
-from repositories.face_repository import FaceRepository
+from ..models.image import Image
+from ..models.face_engine import FaceEngine
+from ..models.face import Face
+from .face_engine_service import FaceEngineService
+from ..repositories.face_repository import FaceRepository
 from dotenv import load_dotenv
 import os
 import logging

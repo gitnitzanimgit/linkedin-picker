@@ -1,14 +1,13 @@
 # pipeline/background_replacer.py
 from pathlib import Path
 import os
-import uuid
 from typing import List, Tuple
 
 from dotenv import load_dotenv
 
-from models.image import Image
-from services.background_service import BackgroundService
-from services.image_service import ImageService
+from ..models.image import Image
+from ..services.background_service import BackgroundService
+from ..services.image_service import ImageService
 
 # env‑vars
 load_dotenv()

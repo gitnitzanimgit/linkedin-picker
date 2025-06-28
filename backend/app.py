@@ -9,7 +9,7 @@ import logging
 import uuid
 import base64
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import List, Any, Optional
 import numpy as np
 import random
 import signal
@@ -22,7 +22,6 @@ load_dotenv()
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
-import cv2
 from PIL import Image as PILImage
 
 # --- DETERMINISTIC EXECUTION SETUP ---
@@ -51,21 +50,21 @@ logging.basicConfig(
 )
 
 # Import services and models
-from services.image_service import ImageService
-from services.face_analysis_service import FaceAnalysisService
-from pipeline.reference_image_validator import is_good_reference
-from pipeline.detect_and_crop import detect_and_crop
-from pipeline.background_replacer import replace_background
-from pipeline.final_scorer import score_final_photos
-from pipeline.top_image_enhancer import enhance_top_images
-from models.image import Image
+from .services.image_service import ImageService
+from .services.face_analysis_service import FaceAnalysisService
+from .pipeline.reference_image_validator import is_good_reference
+from .pipeline.detect_and_crop import detect_and_crop
+from .pipeline.background_replacer import replace_background
+from .pipeline.final_scorer import score_final_photos
+from .pipeline.top_image_enhancer import enhance_top_images
+from .models.image import Image
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend communication
 
 # Configuration
 UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "data/temp_uploads")
-RESULTS_FOLDER = os.getenv("RESULTS_FOLDER", "data/api_results") 
+RESULTS_FOLDER = os.getenv("RESULTS_FOLDER", "data/api_results")
 ALLOWED_EXTENSIONS = set(os.getenv("ALLOWED_EXTENSIONS", "png,jpg,jpeg,gif,bmp,webp").split(","))
 MAX_CONTENT_LENGTH = int(os.getenv("MAX_UPLOAD_SIZE_MB", "100")) * 1024 * 1024
 
