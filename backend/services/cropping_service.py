@@ -55,43 +55,4 @@ class CroppingService:
 
         return new_pixels
 
-    # def crop_tight_face(
-    #     self,
-    #     img: Image,
-    #     face: Face
-    # ) -> np.ndarray:
-    #     """
-    #     Crop tightly around the face with minimal padding (for LinkedIn photo model).
-    #
-    #     Args:
-    #         img (Image): Original image
-    #         face (Face): Face object with bounding box
-    #
-    #     Returns:
-    #         np.ndarray: Tightly cropped face pixels
-    #     """
-    #     # Get image dimensions
-    #     height_img, width_img = self.image_service.get_image_dimensions(img)
-    #
-    #     # Get bounding box coordinates (exact face bounds)
-    #     left, top, right, bottom = self.face_service.get_bbox_coordinates(face)
-    #
-    #     # Add minimal padding (5% of face size)
-    #     face_width = right - left
-    #     face_height = bottom - top
-    #     min_pad = min(face_width, face_height) * 0.05
-    #
-    #     # Calculate tight bounds with minimal padding
-    #     bound_l = round(max(0, left - min_pad))
-    #     bound_r = round(min(width_img, right + min_pad))
-    #     bound_t = round(max(0, top - min_pad))
-    #     bound_b = round(min(height_img, bottom + min_pad))
-    #
-    #     # Get new pixels
-    #     new_pixels = self.image_service.crop_pixels(img, bound_r=bound_r, bound_l=bound_l,
-    #                                                 bound_t=bound_t, bound_b=bound_b)
-    #
-    #     return new_pixels
-
-
 
